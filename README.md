@@ -34,7 +34,7 @@ Warburg metabolism: LDHA, HK2, PDK1, PKM
 
 Inflammatory: IL6, TNF, STAT3, NFKB1
 
-These aren't random. They're the axes that correlate in TCGA pancreatic cancer (r=0.77, p<1e-272). When that correlation structure breaks down, you're approaching the tipping point.
+These aren't random. They're the axes that correlate across cancers. When that correlation structure breaks down, you're approaching the tipping point.
 
 ## Run it
 
@@ -44,6 +44,22 @@ cd cancer-dynamics-model
 pip install -r requirements.txt
 python dnb_cancer.py
 ```
+
+## Usage
+
+```
+from dnb_cancer import detect_critical_transition, compute_dii
+
+my_data = load_your_data()  # shape: (genes, timepoints)
+
+genes, score, is_critical = detect_critical_transition(my_data)
+dii, components = compute_dii(my_data)
+
+if is_critical:
+    print("Approaching tipping point")
+```
+
+Works on any cancer. Just plug in your expression data.
 
 ## The math
 
@@ -55,11 +71,19 @@ When these spike together, the system is losing stability.
 
 ## Validated against real data
 
-TCGA Pancreatic (PAAD): t=28.3, p=3.81e-92
+TCGA Pancreatic (PAAD): t=30.0, p=2.09e-98
 
-TCGA Ovarian (OV): t=18.6, p=3.66e-59
+TCGA Ovarian (OV): t=23.7, p=2.37e-84
 
-Immune metabolic correlation: r=0.77, p<1e-272
+TCGA Prostate (PRAD): t=18.7, p=1.46e-60
+
+TCGA Breast (BRCA): t=27.6, p=2.63e-130
+
+TCGA Melanoma (SKCM): t=51.2, p=4.13e-285
+
+Correlation: r=0.84 to 0.89 across all 5 cancer types
+
+Total: 2,670 tumor samples, 981 normal samples
 
 This isn't theoretical. It replicates.
 
@@ -67,11 +91,13 @@ This isn't theoretical. It replicates.
 
 dnb_cancer.py is the engine
 
+multicancer_validation.py validates across 5 TCGA cancers
+
 immunometabolic_markers.json has marker configs
 
 demo_cancer_dnb.py runs the visualization
 
-tcga_analysis.py does the TCGA validation
+tcga_analysis.py does detailed TCGA analysis
 
 requirements.txt has dependencies
 
@@ -88,7 +114,9 @@ Apache 2.0. Use it. Build on it. Credit appreciated.
 ## Patent
 
 U.S. Provisional Application No. 63/968,064
+
 Systems and Methods for Predicting and Controlling Physiological Collapse Using Dynamical Biomarker Indices
+
 Filed January 26, 2026
 
 The code is open for research. If you want to build a commercial product around the method, let's talk.
