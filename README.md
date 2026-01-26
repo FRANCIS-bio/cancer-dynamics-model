@@ -1,40 +1,49 @@
 # FRANCIS
 
-Catching cancer before it tips.
+Detecting cancer tipping points before they happen.
 
 ## What this is
 
-Cancer doesn't progress in a straight line. It hits tipping points, moments where the system becomes unstable and tips into something worse. Metastasis. Treatment failure. Collapse.
+Code that implements Dynamical Network Biomarker (DNB) theory to detect when a biological system is approaching a critical transition. Built for cancer, but the math works for any complex system approaching a tipping point.
 
-By the time standard biomarkers catch it, you're already there.
+## Status
 
-This code catches the approach to the tipping point. Not the event, the warning signs before it.
+Code: Working. Math is correct.
 
-## The idea
+Theory: Based on published research (Chen et al. 2012, cited 300+ times).
 
-Biological systems show specific signatures when they're approaching a critical transition:
+Testing: Simulated data only. Clinical validation on real patient data not yet done.
 
-1. Variance goes up. Things get wobbly before they break.
-2. Internal correlations spike. A small group of genes start moving together.
-3. External correlations drop. That group decouples from everything else.
+## How it works
 
-This is called critical slowing down. It's physics. It happens in ecosystems, climate, finance, and it happens in tumors.
+The code computes a Dynamical Instability Index (DII) from biomarker time series:
 
-I built this to compute a Dynamical Instability Index (DII) from longitudinal biomarker data. When DII spikes, you're approaching a tipping point. That's your intervention window.
+DII = Entropy + Divergence + Trajectory Instability
 
-## What it actually detects
+When DII spikes, the system is approaching a tipping point. That's the window for intervention.
 
-Pre-metastatic tipping points. Immunometabolic collapse, when immune checkpoints and Warburg metabolism decouple. The window where intervention can still work.
+DNB theory says that before a system tips, a group of genes will show:
+1. Increased variance
+2. Increased correlation with each other
+3. Decreased correlation with everything else
 
-## The markers
+This is called critical slowing down. The code detects it.
 
-Immune checkpoint: PDCD1, LAG3, CTLA4, CD274
+## What the simulation showed
 
-Warburg metabolism: LDHA, HK2, PDK1, PKM
+```
+Tipping score: 0.351 (below threshold, system stable)
+DII: 0.328
+Top markers: IDO1, CD274 (PD-L1), HIF1A, LDHA
+```
 
-Inflammatory: IL6, TNF, STAT3, NFKB1
+These are real immunotherapy targets. The code identified them correctly from simulated data designed to mimic healthy dynamics.
 
-These aren't random. They're the axes that correlate across cancers. When that correlation structure breaks down, you're approaching the tipping point.
+## What it doesn't show yet
+
+Real patient validation. The simulation proves the code runs. It doesn't prove the method detects real cancer tipping points in real patients.
+
+That requires longitudinal data (multiple measurements over time from the same patients as they progress). That validation is next.
 
 ## Run it
 
@@ -45,63 +54,43 @@ pip install -r requirements.txt
 python dnb_cancer.py
 ```
 
-## Usage
-
-```
-from dnb_cancer import detect_critical_transition, compute_dii
-
-my_data = load_your_data()  # shape: (genes, timepoints)
-
-genes, score, is_critical = detect_critical_transition(my_data)
-dii, components = compute_dii(my_data)
-
-if is_critical:
-    print("Approaching tipping point")
-```
-
-Works on any cancer. Just plug in your expression data.
-
-## The math
-
-DII(t) = w1 × Entropy(t) + w2 × Divergence(t) + w3 × TrajectoryInstability(t)
-
-Entropy is complexity breakdown. Divergence is how far current state is from healthy baseline. Trajectory instability is whether nearby states are diverging.
-
-When these spike together, the system is losing stability.
-
 ## Files
 
-dnb_cancer.py is the engine
+dnb_cancer.py — the engine (DNB scores, DII computation)
 
-multicancer_validation.py validates across 5 TCGA cancers
+immunometabolic_markers.json — marker panel configs
 
-immunometabolic_markers.json has marker configs
+demo_cancer_dnb.py — visualization demo
 
-demo_cancer_dnb.py runs the visualization
+requirements.txt — dependencies
 
-tcga_analysis.py does detailed TCGA analysis
+## The science
 
-requirements.txt has dependencies
+DNB theory: Chen L, et al. (2012). Detecting early-warning signals for sudden deterioration of complex diseases by dynamical network biomarkers. Scientific Reports.
 
-## References
+Critical transitions: Scheffer M, et al. (2009). Early-warning signals for critical transitions. Nature.
 
-Chen et al. (2012). Detecting early-warning signals for sudden deterioration of complex diseases by dynamical network biomarkers. Scientific Reports.
-
-Scheffer et al. (2009). Early-warning signals for critical transitions. Nature.
+Both are real, peer-reviewed, widely cited.
 
 ## License
 
-Apache 2.0. Use it. Build on it. Credit appreciated.
+Apache 2.0. Use it. Build on it.
 
 ## Patent
 
-U.S. Provisional Application No. 63/968,064
+U.S. Provisional Patent Application No. 63/968,064
 
 Systems and Methods for Predicting and Controlling Physiological Collapse Using Dynamical Biomarker Indices
 
 Filed January 26, 2026
 
-The code is open for research. If you want to build a commercial product around the method, let's talk.
+The patent protects the method. The code is open for research. Commercial licensing available.
+
+## What's next
+
+1. Validate on TCGA longitudinal proxy data (stage progression as pseudo-time)
+2. Test on liquid biopsy time series if available
+3. Publish results when real validation is complete
 
 ## Contact
 
