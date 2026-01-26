@@ -69,24 +69,6 @@ Entropy is complexity breakdown. Divergence is how far current state is from hea
 
 When these spike together, the system is losing stability.
 
-## Validated against real data
-
-TCGA Pancreatic (PAAD): t=30.0, p=2.09e-98
-
-TCGA Ovarian (OV): t=23.7, p=2.37e-84
-
-TCGA Prostate (PRAD): t=18.7, p=1.46e-60
-
-TCGA Breast (BRCA): t=27.6, p=2.63e-130
-
-TCGA Melanoma (SKCM): t=51.2, p=4.13e-285
-
-Correlation: r=0.84 to 0.89 across all 5 cancer types
-
-Total: 2,670 tumor samples, 981 normal samples
-
-This isn't theoretical. It replicates.
-
 ## Files
 
 dnb_cancer.py is the engine
