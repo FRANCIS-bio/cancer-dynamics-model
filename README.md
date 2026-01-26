@@ -1,135 +1,98 @@
-# FRANCIS - Cancer Dynamics Model
+# FRANCIS
 
-**Framework for Real-time Analysis of Nonlinear Critical Instability Signals**
+Catching cancer before it tips.
 
-Immunometabolic dynamics and critical transition detection in cancer using Dynamical Network Biomarker (DNB) theory.
+## What this is
 
-## Overview
+Cancer doesn't progress in a straight line. It hits tipping points, moments where the system becomes unstable and tips into something worse. Metastasis. Treatment failure. Collapse.
 
-This repository implements computational methods for detecting critical transitions in cancer progression using nonlinear dynamical systems analysis. The system identifies pre-metastatic tipping points by computing a **Dynamical Instability Index (DII)** from longitudinal biomarker data.
+By the time standard biomarkers catch it, you're already there.
 
-### Key Features
+This code catches the approach to the tipping point. Not the event, the warning signs before it.
 
-- **DNB Analysis**: Identifies dominant gene modules exhibiting critical slowing down
-- **DII Computation**: Integrates entropy, divergence, and trajectory instability metrics
-- **Immunometabolic Markers**: Pre-configured panels for immune checkpoint and metabolic drivers
-- **Critical Transition Detection**: Early warning of physiological collapse
+## The idea
 
-## Quickstart
+Biological systems show specific signatures when they're approaching a critical transition:
 
-```bash
-# Clone repository
+1. Variance goes up. Things get wobbly before they break.
+2. Internal correlations spike. A small group of genes start moving together.
+3. External correlations drop. That group decouples from everything else.
+
+This is called critical slowing down. It's physics. It happens in ecosystems, climate, finance, and it happens in tumors.
+
+I built this to compute a Dynamical Instability Index (DII) from longitudinal biomarker data. When DII spikes, you're approaching a tipping point. That's your intervention window.
+
+## What it actually detects
+
+Pre-metastatic tipping points. Immunometabolic collapse, when immune checkpoints and Warburg metabolism decouple. The window where intervention can still work.
+
+## The markers
+
+Immune checkpoint: PDCD1, LAG3, CTLA4, CD274
+
+Warburg metabolism: LDHA, HK2, PDK1, PKM
+
+Inflammatory: IL6, TNF, STAT3, NFKB1
+
+These aren't random. They're the axes that correlate in TCGA pancreatic cancer (r=0.77, p<1e-272). When that correlation structure breaks down, you're approaching the tipping point.
+
+## Run it
+
+```
 git clone https://github.com/FRANCIS-bio/cancer-dynamics-model.git
 cd cancer-dynamics-model
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Run demo
 python dnb_cancer.py
 ```
 
-## What It Detects
+## The math
 
-- Pre-metastatic tipping points
-- Immunometabolic collapse signatures
-- Loss of coordinated immune-metabolic control
-- Critical transition windows for intervention timing
+DII(t) = w1 × Entropy(t) + w2 × Divergence(t) + w3 × TrajectoryInstability(t)
 
-## Immunometabolic Markers
+Entropy is complexity breakdown. Divergence is how far current state is from healthy baseline. Trajectory instability is whether nearby states are diverging.
 
-The system analyzes key marker panels:
+When these spike together, the system is losing stability.
 
-| Category | Markers |
-|----------|---------|
-| Immune Checkpoint | PDCD1, LAG3, CTLA4, CD274 |
-| Metabolic Drivers | KRAS, LDHA, CPT1A, FABP4 |
-| Warburg Effect | LDHA, HK2, PDK1, PKM |
-| Inflammatory | IL6, TNF, STAT3, NFKB1 |
+## Validated against real data
 
-## The Science
+TCGA Pancreatic (PAAD): t=28.3, p=3.81e-92
 
-### Dynamical Network Biomarkers (DNB)
+TCGA Ovarian (OV): t=18.6, p=3.66e-59
 
-As biological systems approach critical transitions, a dominant group of molecules exhibits:
-1. **Dramatically increased variance**
-2. **Increased internal correlation** (within the DNB group)
-3. **Decreased external correlation** (with other molecules)
+Immune metabolic correlation: r=0.77, p<1e-272
 
-This is the hallmark of **critical slowing down** preceding state transitions.
+This isn't theoretical. It replicates.
 
-### Dynamical Instability Index (DII)
+## Files
 
-```
-DII(t) = w₁ × Entropy(t) + w₂ × Divergence(t) + w₃ × TrajectoryInstability(t)
-```
+dnb_cancer.py is the engine
 
-Where:
-- **Entropy**: Sample/multiscale entropy measuring complexity breakdown
-- **Divergence**: Jensen-Shannon divergence from healthy reference
-- **Trajectory Instability**: Lyapunov exponent approximation
+immunometabolic_markers.json has marker configs
 
-## Usage Example
+demo_cancer_dnb.py runs the visualization
 
-```python
-from dnb_cancer import detect_critical_transition, compute_dii
+tcga_analysis.py does the TCGA validation
 
-# Load your gene expression time-series data
-# data shape: (n_genes, n_timepoints)
-
-# Detect critical transition
-dnb_genes, tipping_score, is_critical = detect_critical_transition(data)
-
-if is_critical:
-    print(f"WARNING: Critical transition detected (score: {tipping_score:.2f})")
-    print(f"Top DNB genes: {dnb_genes[:10]}")
-
-# Compute DII
-dii, components = compute_dii(data)
-print(f"DII: {dii:.4f}")
-```
-
-## File Structure
-
-```
-cancer-dynamics-model/
-├── dnb_cancer.py              # Core DNB/DII computation engine
-├── immunometabolic_markers.json   # Marker panel configurations
-├── requirements.txt           # Python dependencies
-├── README.md                  # This file
-└── LICENSE                    # Apache 2.0
-```
-
-## Validation
-
-Methods validated against:
-- TCGA pancreatic adenocarcinoma (PAAD): t=28.266, p=3.81e-92
-- TCGA ovarian cancer (OV): t=-18.550, p=3.66e-59
-- Correlation between immune/metabolic axes: r=0.769, p=1.15e-272
+requirements.txt has dependencies
 
 ## References
 
-1. Chen L, et al. (2012). Detecting early-warning signals for sudden deterioration of complex diseases by dynamical network biomarkers. *Scientific Reports*.
-2. Scheffer M, et al. (2009). Early-warning signals for critical transitions. *Nature*.
+Chen et al. (2012). Detecting early-warning signals for sudden deterioration of complex diseases by dynamical network biomarkers. Scientific Reports.
+
+Scheffer et al. (2009). Early-warning signals for critical transitions. Nature.
 
 ## License
 
-Apache 2.0 — See [LICENSE](LICENSE) file.
+Apache 2.0. Use it. Build on it. Credit appreciated.
 
-## Patent Notice
+## Patent
 
-The methods implemented in this repository are covered by:
+U.S. Provisional Application No. 63/968,064
+Systems and Methods for Predicting and Controlling Physiological Collapse Using Dynamical Biomarker Indices
+Filed January 26, 2026
 
-**U.S. Provisional Patent Application No. 63/968,064**  
-*"Systems and Methods for Predicting and Controlling Physiological Collapse Using Dynamical Biomarker Indices"*  
-Filed: January 26, 2026
-
-This open-source release is for **research and educational use**. Commercial use of the patented system/method may require a license from the patent holder.
+The code is open for research. If you want to build a commercial product around the method, let's talk.
 
 ## Contact
 
-For licensing inquiries or collaboration, open an issue or contact via GitHub.
-
----
-
-*FRANCIS: Detecting critical transitions before collapse.*
+Open an issue or reach out through GitHub.
