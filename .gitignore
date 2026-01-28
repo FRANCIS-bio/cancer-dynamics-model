@@ -1,0 +1,89 @@
+# FRANCIS Repository .gitignore
+
+# ===== Data Files =====
+# TCGA data files are large - never commit
+*.tsv
+*.csv
+*.xlsx
+*.parquet
+data/*
+!data/.gitkeep
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+*.ipynb
+
+# ===== OS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== Legal / Private =====
+# Never commit these
+*micro_entity*
+*sb0015*
+*signed*
+*.pdf
+!docs/*.pdf
+
+# ===== Output =====
+*.png
+*.jpg
+*.jpeg
+!docs/*.png
+!docs/*.jpg
+output/
+results/
+figures/
+!docs/figures/
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Credentials =====
+*.env
+.env
+credentials.json
+secrets.json
